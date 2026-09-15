@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deadzone SOS | Emergency Network</title>
+    <title>DisasterLink | IoT Disaster Network</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
@@ -11,15 +11,17 @@
 </head>
 <body class="animated-bg fade-in">
 
+    <!-- Navigation Bar -->
     <nav class="navbar">
-        <a href="index.html" class="logo"><span class="dz">Deadzone</span><span class="sos">SOS</span></a>
+        <!-- Brand Name Updated to DisasterLink -->
+        <a href="index.html" class="logo"><span class="dz">Disaster</span><span class="sos">Link</span></a>
         
         <div class="menu-toggle" id="mobile-menu">☰</div>
         
         <div class="nav-links">
             <a href="index.html" class="active">Home</a>
             <a href="report.html">Report Emergency</a>
-            <a href="dashboard.html">Live Rescues</a>
+            <a href="dashboard.html">Rescue Dashboard</a>
             <a href="guidelines.html">Survival Guide</a>
             <a href="maps.html">Offline Maps</a>
             <a href="admin.html" class="admin-link">Admin</a>
@@ -27,69 +29,53 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header class="hero">
         <div class="hero-text">
-            <h1>Emergency Help, <br><span class="highlight">Even Without Internet.</span></h1>
-            <p class="large-text">This app works when cell towers fail. Report your emergency, and the app will automatically alert rescuers the moment a signal is found.</p>
-            <a href="report.html" class="btn-primary huge-btn">🚨 TAP HERE TO GET HELP</a>
+            <h1>IoT-Based Smart <br><span class="highlight">Disaster Network.</span></h1>
+            <p class="large-text">A low-cost, two-node IoT communication prototype using ESP32 and SX1278 LoRa modules to transport emergency environmental telemetry when conventional Internet fails.</p>
+            <a href="dashboard.html" class="btn-primary huge-btn">📡 OPEN RESCUE DASHBOARD</a>
         </div>
         <div class="hero-image">
-            <img src="hero.jpg" alt="Rescue workers helping people">
+            <img src="hero.jpg" alt="DisasterLink IoT Nodes">
         </div>
     </header>
-    <section class="install-guide" style="padding: 40px 5%; max-width: 1000px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, var(--bg-color-2), var(--bg-color-1)); border: 2px dashed var(--accent-teal); padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-            <h2 style="color: var(--accent-teal); margin-bottom: 15px; font-size: 2rem;">⚠️ Mandatory Setup (Do This Now)</h2>
-            <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 25px;">To ensure this app works when cell towers fail, you must initialize it and save it to your phone right now while you are online.</p>
 
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; text-align: left;">
-                
-                <div style="flex: 1; min-width: 280px; background: var(--bg-color-3); padding: 25px; border-radius: 12px; border-left: 5px solid #3b82f6;">
-                    <h3 style="color: #3b82f6; margin-bottom: 15px; font-size: 1.3rem;">🤖 Android / Chrome</h3>
-                    <p style="margin-bottom: 10px; font-size: 1.1rem;">1. Tap the <strong>3-dot menu (⋮)</strong> at the top right of your browser.</p>
-                    <p style="font-size: 1.1rem;">2. Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
-                </div>
-
-                <div style="flex: 1; min-width: 280px; background: var(--bg-color-3); padding: 25px; border-radius: 12px; border-left: 5px solid #f59e0b;">
-                    <h3 style="color: #f59e0b; margin-bottom: 15px; font-size: 1.3rem;">🍎 iPhone / Safari</h3>
-                    <p style="margin-bottom: 10px; font-size: 1.1rem;">1. Tap the <strong>Share icon</strong> at the bottom of the screen (square with an arrow pointing up).</p>
-                    <p style="font-size: 1.1rem;">2. Scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
-                </div>
-
-            </div>
-            
-            <p style="margin-top: 25px; font-weight: 700; color: #4ade80; font-size: 1.2rem; padding: 15px; background: rgba(74, 222, 128, 0.1); border-radius: 8px; display: inline-block;">
-                ✅ Final Step: Open the app from your home screen once to initialize the offline engine!
-            </p>
-        </div>
-    </section>
-
+    <!-- IoT Architecture Steps -->
     <section class="how-it-works">
-        <h2>Simple 3-Step Guide</h2>
+        <h2>System Architecture</h2>
         <div class="card-container">
             <div class="card">
                 <div class="card-icon">1️⃣</div>
-                <h3>Stay Calm & Open App</h3>
-                <p>Do not panic. Keep this app open. You do not need Wi-Fi or mobile data to use it.</p>
+                <h3>Field Node (Sense)</h3>
+                <p>An ESP32 equipped with a water-level sensor monitors the environment. When a flood threshold is crossed, it packages the data.</p>
             </div>
             <div class="card">
                 <div class="card-icon">2️⃣</div>
-                <h3>Fill Out the Form</h3>
-                <p>Tap the big red button above. Tell us where you are and what the emergency is.</p>
+                <h3>LoRa Link (Transmit)</h3>
+                <p>The SX1278/RA-02 module transmits compact point-to-point packets over long distances without needing cellular infrastructure.</p>
             </div>
             <div class="card">
                 <div class="card-icon">3️⃣</div>
-                <h3>We Do The Rest</h3>
-                <p>The app will securely save your message and automatically send it to rescue teams when a connection is safe.</p>
+                <h3>Rescue Node (Display)</h3>
+                <p>The receiving node validates the packet, sends an ACK, and forwards serial data to this dashboard for responders.</p>
             </div>
         </div>
     </section>
+
+    <!-- Project Credits Footer -->
+    <footer style="background: var(--bg-color-3); padding: 40px 5%; text-align: center; border-top: 2px solid var(--bg-color-2); margin-top: 40px;">
+        <h3 style="color: var(--accent-teal); margin-bottom: 10px;">CGC University Mohali</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Department of Computer Science & Engineering | B.Tech 3rd Semester</p>
+        
+        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: var(--text-light); font-size: 0.9rem;">
+            <div><strong>Team:</strong><br>Parth (2510001318)<br>Chaitanya (2510001324)<br>Gopesh Rajput (2510001363)<br>Aryan Vishwakarma (2510001314)</div>
+            <div><strong>Guides:</strong><br>Ms. Aparna<br>Mr. Prince Jamwal</div>
+        </div>
+    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="app.js"></script>
 </body>
-
 </html>
-
-
