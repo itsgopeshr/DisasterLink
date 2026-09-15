@@ -27,19 +27,20 @@
 
     <div class="page-container">
         
+        <!-- Left Side: Explanation for Judges/Rescuers -->
         <div class="info-panel">
-            <h2>Live Rescue Feed</h2>
-            <p class="large-text">This dashboard is connected directly to our real-time cloud database. Incoming SOS signals will appear here instantly across all devices.</p>
+            <h2>Rescue Dashboard</h2>
+            <p class="large-text">This interface represents the laptop-based visualization layer. It ingests validated serial telemetry from the ESP32 Rescue Node.</p>
             
             <div class="status-box">
-                <h3>System Status: <span class="online-text">Live & Listening 📡</span></h3>
-                <p>Waiting for incoming sync data from mobile units...</p>
+                <h3>LoRa Link Status: <span class="online-text">Listening 📡</span></h3>
+                <p>Waiting for incoming field telemetry (Water-level thresholds & GPS)...</p>
             </div>
 
             <ul class="feature-list" style="margin-top: 30px; font-size: 1.1rem; list-style: none;">
-                <li style="margin-bottom: 15px;">🔴 <strong>Critical:</strong> Immediate life threats (Trapped/Medical)</li>
-                <li style="margin-bottom: 15px;">🟠 <strong>Warning:</strong> Environmental hazards (Fire/Powerlines)</li>
-                <li style="margin-bottom: 15px;">⚪ <strong>Unclassified:</strong> Custom user-reported emergencies</li>
+                <li style="margin-bottom: 15px;">🌊 <strong>Flood Event:</strong> Water-level sensor crossed calibrated threshold</li>
+                <li style="margin-bottom: 15px;">📍 <strong>Location:</strong> GNSS/GPS coordinates acquired (Optional)</li>
+                <li style="margin-bottom: 15px;">✅ <strong>ACK Status:</strong> Message ID validated and acknowledged</li>
             </ul>
         </div>
 
