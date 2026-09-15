@@ -1,6 +1,6 @@
 {
-  "name": "Deadzone SOS Disaster Network",
-  "short_name": "Deadzone",
+  "name": "DisasterLink IoT Network",
+  "short_name": "DisasterLink",
   "description": "Offline-first disaster management and reporting tool.",
   "start_url": "/index.html",
   "display": "standalone",
