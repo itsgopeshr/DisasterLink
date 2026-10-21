@@ -1,67 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Rescues | IoT Disaster Network</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue Dashboard | DisasterLink ESP32 Telemetry</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
-<body class="animated-bg fade-in">
+<body>
 
-    <nav class="navbar">
-        <a href="index.html" class="logo"><span class="dz">Disaster</span><span class="sos">Link</span></a>
-        <div class="menu-toggle" id="mobile-menu">☰</div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="report.html">Report Emergency</a>
-            <a href="dashboard.html" class="active">Live Rescues</a>
-            <a href="guidelines.html">Survival Guide</a>
-            <a href="maps.html">Offline Maps</a>
-            <a href="admin.html" class="admin-link">Admin</a>
-            <button id="battery-toggle" class="btn-battery">🔋 Saver</button>
+  <nav class="navbar">
+    <a href="index.html" class="brand">🚨 Disaster<span>Link</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">SOS Portal</a></li>
+      <li><a href="dashboard.html" class="active">Live Rescue Dashboard</a></li>
+      <li><a href="admin.html">Admin / ACK Control</a></li>
+      <li><a href="guidelines.html">Guidelines & Info</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <!-- ESP32 LIVE USB SERIAL PANEL -->
+    <div class="card" style="border-color: var(--accent-blue);">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🔌 ESP32 Hardware Node — Live USB Serial Telemetry (HW-038 on GPIO4)</div>
+          <p id="serial-conn-status" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
+            Status: Disconnected (Close Arduino Serial Monitor first, then click Connect USB)
+          </p>
         </div>
-    </nav>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button id="connect-usb-btn" class="btn btn-primary" onclick="connectESP32Serial()">
+            🔌 Connect ESP32 via USB (115200 Baud)
+          </button>
+          <button id="mute-beep-btn" class="btn btn-outline" onclick="toggleAudioAlarm()">
+            🔊 Laptop Beep: ON
+          </button>
+          <button class="btn btn-warning" onclick="simulateHardwareFloodAlert()">
+            🧪 Simulate Flood Drop
+          </button>
+        </div>
+      </div>
 
-    <div class="page-container">
-        
-        <!-- Left Side: Explanation for Judges/Rescuers -->
-        <div class="info-panel">
-            <h2>Rescue Dashboard</h2>
-            <p class="large-text">This interface represents the laptop-based visualization layer. It ingests validated serial telemetry from the ESP32 Rescue Node.</p>
-            
-            <div class="status-box">
-                <h3>LoRa Link Status: <span class="online-text">Listening 📡</span></h3>
-                <p>Waiting for incoming field telemetry (Water-level thresholds & GPS)...</p>
-            </div>
-
-            <ul class="feature-list" style="margin-top: 30px; font-size: 1.1rem; list-style: none;">
-                <li style="margin-bottom: 15px;">🌊 <strong>Flood Event:</strong> Water-level sensor crossed calibrated threshold</li>
-                <li style="margin-bottom: 15px;">📍 <strong>Location:</strong> GNSS/GPS coordinates acquired (Optional)</li>
-                <li style="margin-bottom: 15px;">✅ <strong>ACK Status:</strong> Message ID validated and acknowledged</li>
-            </ul>
+      <div class="grid-3">
+        <!-- Live State -->
+        <div class="stat-box">
+          <div class="stat-label">HW-038 Water Sensor State</div>
+          <div id="live-water-state" class="stat-value" style="color: var(--safe-green);">
+            WAITING FOR USB...
+          </div>
+          <div id="live-led-indicator" style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
+            GPIO5 Green LED: OFF
+          </div>
         </div>
 
-        <div class="data-panel">
-            <div class="dashboard-header">
-                <h3>Incoming Reports</h3>
-                <span id="report-count" class="badge">0 Total</span>
-            </div>
-            
-            <div id="reports-container" class="reports-feed">
-                <div class="empty-state">
-                    <p>No active reports. The area is secure.</p>
-                </div>
-            </div>
+        <!-- Live Analog Value -->
+        <div class="stat-box">
+          <div class="stat-label">12-Bit ADC Reading (GPIO4 / D4)</div>
+          <div class="stat-value">
+            <span id="live-adc-value">0</span>
+            <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 400;"> / 4095</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--warning-amber); margin-top: 6px;">
+            Flood Trigger Threshold: <strong>300</strong>
+          </div>
         </div>
 
+        <!-- Live Location & Intensity Bar -->
+        <div class="stat-box" style="text-align: left;">
+          <div class="stat-label">Water Conductivity Meter & Node Location</div>
+          <div class="meter-bg">
+            <div id="live-water-bar" class="meter-fill"></div>
+          </div>
+          <div style="font-size: 0.83rem; color: var(--text-muted); margin-top: 10px;">
+            📍 Location: <strong id="dashboard-gps-text" style="color: var(--accent-cyan);">Detecting...</strong>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="app.js"></script>
-</body>
+    <!-- MAP + STATS -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🗺️ Live Flood & Emergency Geolocation Map</div>
+          <button class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="refreshGPSLocation()">
+            📍 Refresh GPS
+          </button>
+        </div>
+        <div id="rescue-map" style="height: 320px; width: 100%; border-radius: 8px; border: 1px solid var(--border-color);"></div>
+      </div>
 
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Telemetry Summary</div>
+        </div>
+        <div class="grid-2">
+          <div class="stat-box">
+            <div class="stat-label">Total Packets Received</div>
+            <div id="stat-total-alerts" class="stat-value">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Flood Warnings (WET)</div>
+            <div id="stat-flood-alerts" class="stat-value" style="color: var(--danger-red);">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Acknowledged (ACK)</div>
+            <div id="stat-ack-alerts" class="stat-value" style="color: var(--accent-cyan);">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Last Serial Line</div>
+            <div id="stat-last-serial" class="stat-value" style="font-size: 1.1rem; font-family: monospace;">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTS TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🚨 Live Emergency & Flood Alert Feed</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-danger" style="padding: 0.4rem 0.85rem; font-size: 0.82rem;" onclick="triggerQuickManualSOS()">
+            + Manual HELP Alert
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table id="alertTable">
+          <thead>
+            <tr>
+              <th>Message ID</th>
+              <th>Alert Type</th>
+              <th>Node / Sensor Reading</th>
+              <th>Priority</th>
+              <th>Location (GPS)</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Action (ACK)</th>
+            </tr>
+          </thead>
+          <tbody id="alertBody">
+            <!-- Populated dynamically by app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    DisasterLink • B.Tech CSE Engineering Clinics Project • CGC University, Mohali
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
