@@ -1,81 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DisasterLink | IoT Disaster Network</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DisasterLink | IoT-Based Smart Disaster Communication Network</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="animated-bg fade-in">
+<body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <!-- Brand Name Updated to DisasterLink -->
-        <a href="index.html" class="logo"><span class="dz">Disaster</span><span class="sos">Link</span></a>
-        
-        <div class="menu-toggle" id="mobile-menu">☰</div>
-        
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="report.html">Report Emergency</a>
-            <a href="dashboard.html">Rescue Dashboard</a>
-            <a href="guidelines.html">Survival Guide</a>
-            <a href="maps.html">Offline Maps</a>
-            <a href="admin.html" class="admin-link">Admin</a>
-            <button id="battery-toggle" class="btn-battery" title="Turn on Battery Saver">🔋 Saver</button>
-        </div>
-    </nav>
+  <nav class="navbar">
+    <a href="index.html" class="brand">🚨 Disaster<span>Link</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">SOS Portal</a></li>
+      <li><a href="dashboard.html">Live Rescue Dashboard</a></li>
+      <li><a href="admin.html">Admin / ACK Control</a></li>
+      <li><a href="guidelines.html">Guidelines & Info</a></li>
+    </ul>
+  </nav>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="hero-text">
-            <h1>IoT-Based Smart <br><span class="highlight">Disaster Network.</span></h1>
-            <p class="large-text">A low-cost, two-node IoT communication prototype using ESP32 and SX1278 LoRa modules to transport emergency environmental telemetry when conventional Internet fails.</p>
-            <a href="dashboard.html" class="btn-primary huge-btn">📡 OPEN RESCUE DASHBOARD</a>
-        </div>
-        <div class="hero-image">
-            <img src="hero.jpg" alt="DisasterLink IoT Nodes">
-        </div>
-    </header>
+  <header class="hero">
+    <h1>DisasterLink Emergency Network</h1>
+    <p>
+      Low-cost local flood-event telemetry and emergency SOS alerting using ESP32, HW-038 water sensing, and real-time rescue coordination.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="dashboard.html" class="btn btn-primary">📡 Open Live Hardware Dashboard</a>
+      <button class="btn btn-danger" onclick="triggerQuickManualSOS()">🆘 PRESS FOR HELP (Manual SOS)</button>
+    </div>
+  </header>
 
-    <!-- IoT Architecture Steps -->
-    <section class="how-it-works">
-        <h2>System Architecture</h2>
-        <div class="card-container">
-            <div class="card">
-                <div class="card-icon">1️⃣</div>
-                <h3>Field Node (Sense)</h3>
-                <p>An ESP32 equipped with a water-level sensor monitors the environment. When a flood threshold is crossed, it packages the data.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">2️⃣</div>
-                <h3>LoRa Link (Transmit)</h3>
-                <p>The SX1278/RA-02 module transmits compact point-to-point packets over long distances without needing cellular infrastructure.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">3️⃣</div>
-                <h3>Rescue Node (Display)</h3>
-                <p>The receiving node validates the packet, sends an ACK, and forwards serial data to this dashboard for responders.</p>
-            </div>
+  <main class="container">
+    <div class="grid-3" style="margin-bottom: 1.5rem;">
+      <div class="stat-box">
+        <div class="stat-label">Current GPS Location</div>
+        <div id="user-gps-display" class="stat-value" style="font-size: 1.05rem; color: var(--accent-cyan);">
+          Detecting location...
         </div>
-    </section>
-
-    <!-- Project Credits Footer -->
-    <footer style="background: var(--bg-color-3); padding: 40px 5%; text-align: center; border-top: 2px solid var(--bg-color-2); margin-top: 40px;">
-        <h3 style="color: var(--accent-teal); margin-bottom: 10px;">CGC University Mohali</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Department of Computer Science & Engineering | B.Tech 3rd Semester</p>
-        
-        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: var(--text-light); font-size: 0.9rem;">
-            <div><strong>Team:</strong><br>Parth (2510001318)<br>Chaitanya (2510001324)<br>Gopesh Rajput (2510001363)<br>Aryan Vishwakarma (2510001314)</div>
-            <div><strong>Guides:</strong><br>Ms. Aparna<br>Mr. Prince Jamwal</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">ESP32 Node Status (GPIO4)</div>
+        <div id="home-sensor-status" class="stat-value" style="font-size: 1.3rem; color: var(--safe-green);">
+          STANDBY (Open Dashboard for USB)
         </div>
-    </footer>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Active Emergency Alerts</div>
+        <div id="home-active-count" class="stat-value" style="color: var(--warning-amber);">0</div>
+      </div>
+    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="app.js"></script>
+    <div class="grid-2">
+      <!-- Manual SOS Form -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🆘 Dispatch Emergency SOS Packet</div>
+          <span class="badge badge-critical">Priority Dispatch</span>
+        </div>
+        <form id="sos-form" onsubmit="submitManualSOSForm(event)">
+          <div class="form-group">
+            <label for="sos-name">Reporter / Node Identifier</label>
+            <input type="text" id="sos-name" class="form-control" placeholder="e.g., Node-01 / Civilian Sector A" required />
+          </div>
+          <div class="form-group">
+            <label for="sos-type">Emergency Type</label>
+            <select id="sos-type" class="form-control">
+              <option value="FLOOD WARNING (Manual)">🌊 Flood Warning / Rising Water</option>
+              <option value="MANUAL HELP (SOS Button)">🆘 Trapped / Immediate Rescue Needed</option>
+              <option value="MEDICAL EMERGENCY">🚑 Critical Medical Emergency</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sos-notes">Situation Details</label>
+            <input type="text" id="sos-notes" class="form-control" placeholder="Describe water level, landmarks, or number of people" />
+          </div>
+          <button type="submit" class="btn btn-danger" style="width: 100%;">
+            🚀 Transmit Emergency Alert with Location
+          </button>
+        </form>
+      </div>
+
+      <!-- Recent Alerts Feed -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Latest Network Transmissions</div>
+          <a href="dashboard.html" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">View Full Map & USB</a>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Event</th>
+                <th>Location</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recent-alerts-body">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted);">No alerts recorded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    DisasterLink • B.Tech CSE Engineering Clinics Project • CGC University, Mohali | Team: Parth, Gopesh Rajput, Chaitanya Sharma, Aryan Vishwakarma
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
