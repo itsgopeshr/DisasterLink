@@ -1,120 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal | IoT Disaster Network</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin & ACK Control | DisasterLink</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="animated-bg fade-in">
+<body>
 
-    <nav class="navbar">
-        <a href="index.html" class="logo"><span class="dz">Disaster</span><span class="sos">Link</span></a>
-        <div class="menu-toggle" id="mobile-menu">☰</div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="report.html">Report Emergency</a>
-            <a href="dashboard.html">Live Rescues</a>
-            <a href="guidelines.html">Survival Guide</a>
-            <a href="maps.html">Offline Maps</a>
-            <a href="admin.html" class="active admin-link">Admin</a>
-            <button id="battery-toggle" class="btn-battery">🔋 Saver</button>
+  <nav class="navbar">
+    <a href="index.html" class="brand">🚨 Disaster<span>Link</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">SOS Portal</a></li>
+      <li><a href="dashboard.html">Live Rescue Dashboard</a></li>
+      <li><a href="admin.html" class="active">Admin / ACK Control</a></li>
+      <li><a href="guidelines.html">Guidelines & Info</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🛡️ Rescue Coordinator — Incident & ACK Management</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
+            Verify incoming flood warnings and manual SOS packets, transmit acknowledgements (ACK), and manage rescue dispatch.
+          </p>
         </div>
-    </nav>
-
-    <div class="page-container">
-        
-        <div id="admin-login-section" class="form-panel" style="max-width: 500px; margin: 0 auto; flex: none; width: 100%;">
-            <h2 style="color: #f59e0b; text-align: center; margin-bottom: 20px;">Restricted Access</h2>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Authorized disaster management personnel only.</p>
-            
-            <form id="admin-login-form">
-                <div class="form-group">
-                    <label>Admin ID / Username</label>
-                    <input type="text" id="admin-user" class="large-input" placeholder="Enter ID..." required>
-                </div>
-                <div class="form-group">
-                    <label>Passcode</label>
-                    <input type="password" id="admin-pass" class="large-input" placeholder="Enter passcode..." required>
-                </div>
-                <button type="submit" class="huge-btn full-width" style="background-color: #f59e0b;">LOGIN TO COMMAND</button>
-            </form>
-            <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #64748b;">User: Genesis | Pass: Genesis123</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-warning" onclick="simulateHardwareFloodAlert()">🧪 Inject Test Flood Alert</button>
+          <button class="btn btn-outline" onclick="acknowledgeAllAlerts()">✅ Send ACK to All</button>
+          <button class="btn btn-danger" onclick="clearAllAlerts()">🗑️ Clear Alert Log</button>
         </div>
+      </div>
 
-
-        <div id="admin-dashboard-section" class="hidden" style="width: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2>Command Center Controls</h2>
-                <button id="logout-btn" class="btn-battery" style="border-color: #ef4444; color: #ef4444;">Logout X</button>
-            </div>
-
-            <div class="card-container">
-                <div class="card" style="border-top-color: #ef4444; display: flex; flex-direction: column;">
-                    <h3>🧹 Data Management</h3>
-                    <p style="margin-bottom: 20px;">Manage active emergency signals.</p>
-                    
-                    <button id="clear-all-btn" class="huge-btn full-width" style="background-color: #ef4444; font-size: 1.1rem; padding: 12px; margin-bottom: 20px;">⚠ DELETE ALL DATA</button>
-                    
-                    <h4 style="margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #475569; color: var(--text-light);">Delete Specific Reports:</h4>
-                    
-                    <div id="admin-reports-list" style="flex: 1; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;">
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Loading reports...</p>
-                    </div>
-                </div>
-
-                <div class="card" style="border-top-color: #3b82f6;">
-                    <h3>📢 Broadcast Announcement</h3>
-                    <p style="margin-bottom: 20px;">Push a live alert to all connected devices.</p>
-                    <form id="announcement-form">
-                        <input type="text" id="announce-title" class="large-input" placeholder="Alert Title (e.g., Tsunami Warning)" style="margin-bottom: 15px;" required>
-                        <textarea id="announce-msg" class="large-input" rows="3" placeholder="Message details..." style="margin-bottom: 15px;" required></textarea>
-                        <button type="submit" class="huge-btn full-width" style="background-color: #3b82f6; font-size: 1.1rem; padding: 12px; margin-bottom: 15px;">SEND BROADCAST</button>
-                    </form>
-                    
-                    <button id="stop-broadcast-btn" class="btn-battery full-width" style="border-color: #fbbf24; color: #fbbf24; font-size: 1rem; padding: 10px;">Stop Current Broadcast</button>
-                </div>
-            </div>
-        </div>
-
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Message ID</th>
+              <th>Alert Type</th>
+              <th>Sensor / Details</th>
+              <th>Priority</th>
+              <th>Location (GPS)</th>
+              <th>Timestamp</th>
+              <th>Status</th>
+              <th>Responder Controls</th>
+            </tr>
+          </thead>
+          <tbody id="admin-alert-body">
+            <!-- Populated by app.js -->
+          </tbody>
+        </table>
+      </div>
     </div>
+  </main>
 
+  <footer>
+    DisasterLink • B.Tech CSE Engineering Clinics Project • CGC University, Mohali
+  </footer>
 
-        <div id="admin-dashboard-section" class="hidden" style="width: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2>Command Center Controls</h2>
-                <button id="logout-btn" class="btn-battery" style="border-color: #ef4444; color: #ef4444;">Logout X</button>
-            </div>
-
-            <div class="card-container">
-                <div class="card" style="border-top-color: #ef4444;">
-                    <h3>🧹 Data Management</h3>
-                    <p style="margin-bottom: 20px;">Use this during the hackathon to clear old test data or remove false reports.</p>
-                    <button id="clear-all-btn" class="huge-btn full-width" style="background-color: #ef4444; font-size: 1.2rem; padding: 15px;">DELETE ALL REPORTS</button>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">*In the live app version, you can click specific reports on the dashboard to delete them individually.</p>
-                </div>
-
-                <div class="card" style="border-top-color: #3b82f6;">
-                    <h3>📢 Broadcast Announcement</h3>
-                    <p style="margin-bottom: 20px;">Push a live alert to all connected devices.</p>
-                    <form id="announcement-form">
-                        <input type="text" id="announce-title" class="large-input" placeholder="Alert Title (e.g., Tsunami Warning)" style="margin-bottom: 15px;" required>
-                        <textarea id="announce-msg" class="large-input" rows="3" placeholder="Message details..." style="margin-bottom: 15px;" required></textarea>
-                        <button type="submit" class="huge-btn full-width" style="background-color: #3b82f6; font-size: 1.2rem; padding: 15px;">SEND BROADCAST</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
-
